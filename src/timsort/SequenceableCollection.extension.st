@@ -42,7 +42,7 @@ SequenceableCollection >> timsortraw: sortBlock [
 	| liblua intExternalAddress array guilty |
 	liblua := LibLua uniqueInstance.
 
-	intExternalAddress := Int32WeightedExternalAddress allocate:
+	intExternalAddress := Int32TypedExternalAddress allocate:
 		                      self size.
 
 	liblua withOpenedLibsStateDo: [ :state | 
