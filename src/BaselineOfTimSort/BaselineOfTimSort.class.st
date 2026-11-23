@@ -3,14 +3,12 @@ The baseline of [TimSort](https://github.com/massimo-nocentini/timsort.st): tims
 
 Groups:
 
-| Group | Packages |
-| --- | --- |
-| `Core` | the packages `TimSort` and `TimSort-Smalltalk`, which need no other project |
-| `Tests` | `TimSort-Tests` |
-| `FFI` | `TimSort-FFI`: the library `libTimSortFFI` through the FFI, on a VM without the plugin |
-| `FFITests` | `TimSort-FFI-Tests` |
-| `Smalltalk` | `TimSort-Smalltalk` alone: the port of timsort.c, without the facade |
-| `SmalltalkTests` | `TimSort-Smalltalk-Tests` |
+- `Core` (the packages `TimSort` and `TimSort-Smalltalk`, which need no other project);
+- `Tests` (`TimSort-Tests`);
+- `FFI` (`TimSort-FFI`: the library `libTimSortFFI` through the FFI, on a VM without the plugin);
+- `FFITests` (`TimSort-FFI-Tests`);
+- `Smalltalk` (`TimSort-Smalltalk` alone: the port of timsort.c, without the facade);
+- `SmalltalkTests` (`TimSort-Smalltalk-Tests`).
 
 `default` loads all of them.
 "

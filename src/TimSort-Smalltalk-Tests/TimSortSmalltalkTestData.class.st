@@ -1,18 +1,16 @@
 "
 I make the inputs of the tests of TimSort-Smalltalk: arrays of integer keys in ten shapes, from a deterministic generator (the minimal standard generator of Park and Miller, `seed := seed * 16807 \\ 2147483647`). The C program that computed the comparison traces of `TimSortSmalltalkFidelityTest` from timsort.c (`trace.c`, see the class comment there) builds the same keys, shape for shape:
 
-| Number | Shape | Keys |
-| ---: | --- | --- |
-| 1 | `random` | `next random \\ 1000000` |
-| 2 | `fewUnique` | `next random \\ 5` |
-| 3 | `sorted` | `i` (keys are numbered from 0) |
-| 4 | `reversed` | `size - i` |
-| 5 | `sawtooth` | `i \\ 37` |
-| 6 | `organPipe` | `i` up to the middle, then `size - i` |
-| 7 | `nearlySorted` | sorted, then `size // 20 + 1` swaps of two random positions |
-| 8 | `sortedChunks` | ascending chunks of 1 to 200 keys (key `base + 3 j`), each from a random base |
-| 9 | `descendingSteps` | `(size - i) // 3`, descending runs with equal subruns |
-| 10 | `allEqual` | 7 |
+- 1 `random`: `next random \\ 1000000`;
+- 2 `fewUnique`: `next random \\ 5`;
+- 3 `sorted`: `i` (keys are numbered from 0);
+- 4 `reversed`: `size - i`;
+- 5 `sawtooth`: `i \\ 37`;
+- 6 `organPipe`: `i` up to the middle, then `size - i`;
+- 7 `nearlySorted`: sorted, then `size // 20 + 1` swaps of two random positions;
+- 8 `sortedChunks`: ascending chunks of 1 to 200 keys (key `base + 3 j`), each from a random base;
+- 9 `descendingSteps`: `(size - i) // 3`, descending runs with equal subruns;
+- 10 `allEqual`: 7.
 "
 Class {
 	#name : 'TimSortSmalltalkTestData',

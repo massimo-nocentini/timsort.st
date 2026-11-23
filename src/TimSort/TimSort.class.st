@@ -24,10 +24,13 @@ TimSort argSort: #( 30 10 20 ).  ""#(2 3 1)""
 
 - **by any sortBlock** (`sort:with:`), exactly Pharo's `sort: aBlock` for a sortBlock in the style of `[ :a :b | a <= b ]`: `TimSortSmalltalk`, the port of timsort.c, sorts on every VM by default (`blockSortBackend`).
 
+```smalltalk
+TimSort sort: people with: [ :a :b | a age <= b age ].
+```
+
 The resumable C sort, which runs timsort on a C stack of its own and stops at each comparison for the block to answer in the calling `Process`, is the same algorithm with the same result, but it was slower in every case measured: 1.1 to 6.5 times through the plugin, 3.5 to 17 times through the library (each comparison is a primitive call and two switches of stacks, or a callout): `sort:with:backend:` `#plugin` or `#ffi` runs it explicitly, where `resumableBackends` has it.
 
 ```smalltalk
-TimSort sort: people with: [ :a :b | a age <= b age ].
 TimSort
 	sort: people
 	with: [ :a :b | a age <= b age ]

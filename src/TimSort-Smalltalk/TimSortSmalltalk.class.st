@@ -5,14 +5,12 @@ The sort is stable, also descending, adaptive (about one comparison per element 
 
 ## The orders
 
-- the natural order, `#<`, ascending or descending:
+- the natural order, `#<`, ascending or descending, the same permutations as `aCollection sort` and `aCollection sort: [ :a :b | a >= b ]`:
 
 ```smalltalk
 TimSortSmalltalk sort: #(3 1 2) copy.  ""#(1 2 3)""
 TimSortSmalltalk sortDescending: #(3 1 2) copy.  ""#(3 2 1)""
 ```
-
-the same permutations as `aCollection sort` and `aCollection sort: [ :a :b | a >= b ]`;
 
 - a sortBlock in the style of Pharo (`a <= b` answers true when a may come before b), with the same result as `aCollection sort: aSortBlock`:
 
