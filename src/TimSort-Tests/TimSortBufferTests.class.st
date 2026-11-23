@@ -1,5 +1,5 @@
 "
-I test TimSort: Numeric buffers (mode b), by value with every NaN last (first descending), against Pharo's sort with the equivalent sortBlocks, bit for bit, per backend.
+I test `TimSort`: Numeric buffers (mode b), by value with every NaN last (first descending), against Pharo's sort with the equivalent sortBlocks, bit for bit, per backend.
 "
 Class {
 	#name : 'TimSortBufferTests',

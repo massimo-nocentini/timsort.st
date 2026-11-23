@@ -1,5 +1,5 @@
 "
-I am the abstract test of a backend of TimSort: each subclass runs once per backend, hook #backend set to backendObject (TimSort sort:with:backend: of its name then runs its resumable sort when it has one; the sorts by a sortBlock run in TimSortSmalltalk by default).
+I am the abstract test of a backend of `TimSort`: each subclass runs once per backend, hook `#backend` set to `backendObject` (`TimSort sort:with:backend:` of its name then runs its resumable sort when it has one; the sorts by a sortBlock run in `TimSortSmalltalk` by default).
 "
 Class {
 	#name : 'TimSortBackendTestCase',

@@ -1,21 +1,48 @@
 "
-I am the API of TimSort, on my class side only: timsort (https://github.com/massimo-nocentini/timsort.c, the stable and adaptive sort of CPython's lists) for the SequenceableCollections of Pharo, in place.  The extension methods (timSort, timSortDescending, timSort:, timSortBy:, timSorted...) call me.
+I am the API of TimSort, on my class side only: [timsort](https://github.com/massimo-nocentini/timsort.c), the stable and adaptive sort of CPython's lists, for the SequenceableCollections of Pharo, in place. The extension methods (`timSort`, `timSortDescending`, `timSort:`, `timSortBy:`, `timSorted`...) call me.
 
-The four modes:
-- the natural order (sort:, sortDescending:, sort:from:to:descending:): Arrays of numbers or of strings are sorted by the plugin in C, without running Smalltalk; any other element, or an Array that mixes them, is sorted by the sortBlock [ :a :b | a <= b ] in Smalltalk.  The result is exactly Pharo's sort (and sort: [ :a :b | a >= b ] descending), since both sorts are stable;
-		TimSort sort: #( 3 1 2 ) copy.  ""#(1 2 3)""
-- numeric buffers (the same selectors, or sortBuffer:): a Float64Array, Float32Array, DoubleWordArray, IntegerArray, WordArray, Bitmap, DoubleByteArray or ByteArray by value, every NaN last (first descending);
-		TimSort sortDescending: (Float64Array withAll: #( 1.5 -2.0 3.0 )).
-- by keys computed once (sort:byKey:, sortDescending:byKey:), and argSort: which answers the permutation that sorts keys;
-		TimSort sort: words byKey: [ :each | each size ].
-		TimSort argSort: #( 30 10 20 ).  ""#(2 3 1)""
-- by any sortBlock (sort:with:), exactly Pharo's sort: aBlock for a sortBlock in the style of [ :a :b | a <= b ]: TimSortSmalltalk, the port of timsort.c, sorts on every VM by default (blockSortBackend).  The resumable C sort, which runs timsort on a C stack of its own and stops at each comparison for the block to answer in the calling Process, is the same algorithm with the same result, but it was slower in every case measured: 1.1 to 6.5 times through the plugin, 3.5 to 17 times through the library (each comparison is a primitive call and two switches of stacks, or a callout): sort:with:backend: #plugin or #ffi runs it explicitly, where resumableBackends has it.
-		TimSort sort: people with: [ :a :b | a age <= b age ].
-		TimSort sort: people with: [ :a :b | a age <= b age ] backend: #plugin.
+## The four modes
 
-Each method calls a backend, which answers as the primitives of the TimSortPlugin answer (docs/TimSort.md, Primitive contract): TimSortPrimitives with the plugin, TimSortLibrary (the package TimSort-FFI) without it, else TimSortPortBackend.  A backend declines what it does not sort natively (the plugin: anything but numbers or strings; the library: anything but SmallIntegers and Floats), and TimSortPortBackend sorts it.  The choice is made once a session (backend, resumableBackends, resetBackend).
+- **the natural order** (`sort:`, `sortDescending:`, `sort:from:to:descending:`): Arrays of numbers or of strings are sorted by the plugin in C, without running Smalltalk; any other element, or an `Array` that mixes them, is sorted by the sortBlock `[ :a :b | a <= b ]` in Smalltalk. The result is exactly Pharo's `sort` (and `sort: [ :a :b | a >= b ]` descending), since both sorts are stable;
 
-Read-only receivers signal ModificationForbidden before anything is touched, on every backend (stricter than Pharo's sort of a Float32Array, a Float64Array or a read-only OrderedCollection), with the retry of Pharo's write barrier: a handler that makes the object writable and sends retryModification lets the sort go on.  Ranges are 1-based and inclusive; a range out of bounds signals SubscriptOutOfBounds.
+```smalltalk
+TimSort sort: #( 3 1 2 ) copy.  ""#(1 2 3)""
+```
+
+- **numeric buffers** (the same selectors, or `sortBuffer:`): a `Float64Array`, `Float32Array`, `DoubleWordArray`, `IntegerArray`, `WordArray`, `Bitmap`, `DoubleByteArray` or `ByteArray` by value, every NaN last (first descending);
+
+```smalltalk
+TimSort sortDescending: (Float64Array withAll: #( 1.5 -2.0 3.0 )).
+```
+
+- **by keys computed once** (`sort:byKey:`, `sortDescending:byKey:`), and `argSort:` which answers the permutation that sorts keys;
+
+```smalltalk
+TimSort sort: words byKey: [ :each | each size ].
+TimSort argSort: #( 30 10 20 ).  ""#(2 3 1)""
+```
+
+- **by any sortBlock** (`sort:with:`), exactly Pharo's `sort: aBlock` for a sortBlock in the style of `[ :a :b | a <= b ]`: `TimSortSmalltalk`, the port of timsort.c, sorts on every VM by default (`blockSortBackend`).
+
+The resumable C sort, which runs timsort on a C stack of its own and stops at each comparison for the block to answer in the calling `Process`, is the same algorithm with the same result, but it was slower in every case measured: 1.1 to 6.5 times through the plugin, 3.5 to 17 times through the library (each comparison is a primitive call and two switches of stacks, or a callout): `sort:with:backend:` `#plugin` or `#ffi` runs it explicitly, where `resumableBackends` has it.
+
+```smalltalk
+TimSort sort: people with: [ :a :b | a age <= b age ].
+TimSort
+	sort: people
+	with: [ :a :b | a age <= b age ]
+	backend: #plugin.
+```
+
+## Backends
+
+Each method calls a backend, which answers as the primitives of the `TimSortPlugin` answer (`docs/TimSort.md`, Primitive contract): `TimSortPrimitives` with the plugin, `TimSortLibrary` (the package `TimSort-FFI`) without it, else `TimSortPortBackend`. A backend declines what it does not sort natively (the plugin: anything but numbers or strings; the library: anything but SmallIntegers and Floats), and `TimSortPortBackend` sorts it. The choice is made once a session (`backend`, `resumableBackends`, `resetBackend`).
+
+## Read-only receivers and ranges
+
+Read-only receivers signal `ModificationForbidden` before anything is touched, on every backend (stricter than Pharo's sort of a `Float32Array`, a `Float64Array` or a read-only `OrderedCollection`), with the retry of Pharo's write barrier: a handler that makes the object writable and sends `retryModification` lets the sort go on.
+
+Ranges are 1-based and inclusive; a range out of bounds signals `SubscriptOutOfBounds`.
 "
 Class {
 	#name : 'TimSort',

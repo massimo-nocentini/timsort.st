@@ -1,7 +1,18 @@
 "
-The baseline of TimSort (https://github.com/massimo-nocentini/timsort.st): timsort, the stable and adaptive sort of CPython, for Pharo 12 to 15, on the TimSortPlugin of the VM, on the library libTimSortFFI through the FFI, or in pure Smalltalk.
+The baseline of [TimSort](https://github.com/massimo-nocentini/timsort.st): timsort, the stable and adaptive sort of CPython, for Pharo 12 to 15, on the `TimSortPlugin` of the VM, on the library `libTimSortFFI` through the FFI, or in pure Smalltalk.
 
-Groups: Core (the packages TimSort and TimSort-Smalltalk, which need no other project), Tests (TimSort-Tests), FFI (TimSort-FFI: the library libTimSortFFI through the FFI, on a VM without the plugin), FFITests (TimSort-FFI-Tests), Smalltalk (TimSort-Smalltalk alone: the port of timsort.c, without the facade), SmalltalkTests (TimSort-Smalltalk-Tests); default loads all of them.
+Groups:
+
+| Group | Packages |
+| --- | --- |
+| `Core` | the packages `TimSort` and `TimSort-Smalltalk`, which need no other project |
+| `Tests` | `TimSort-Tests` |
+| `FFI` | `TimSort-FFI`: the library `libTimSortFFI` through the FFI, on a VM without the plugin |
+| `FFITests` | `TimSort-FFI-Tests` |
+| `Smalltalk` | `TimSort-Smalltalk` alone: the port of timsort.c, without the facade |
+| `SmalltalkTests` | `TimSort-Smalltalk-Tests` |
+
+`default` loads all of them.
 "
 Class {
 	#name : 'BaselineOfTimSort',

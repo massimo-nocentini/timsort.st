@@ -1,5 +1,11 @@
 "
-I am signalled by TimSort class>>sort:with:backend: and sort:from:to:with:backend: when the backend they name has no resumable C sort here, before the collection is looked at: #plugin without the TimSortPlugin, or with a plugin that cannot switch C stacks (WebAssembly, a process with a shadow stack); #ffi without the package TimSort-FFI or libTimSortFFI, or with a library that cannot switch C stacks; or a name other than #plugin, #ffi and #smalltalk.  backendName is that name, and messageText says why.  TimSort resumableBackends answers the names that work.
+I am signalled by `TimSort class>>sort:with:backend:` and `sort:from:to:with:backend:` when the backend they name has no resumable C sort here, before the collection is looked at:
+
+- `#plugin` without the `TimSortPlugin`, or with a plugin that cannot switch C stacks (WebAssembly, a process with a shadow stack);
+- `#ffi` without the package `TimSort-FFI` or `libTimSortFFI`, or with a library that cannot switch C stacks;
+- or a name other than `#plugin`, `#ffi` and `#smalltalk`.
+
+`backendName` is that name, and `messageText` says why. `TimSort resumableBackends` answers the names that work.
 "
 Class {
 	#name : 'TimSortBackendUnavailable',

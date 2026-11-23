@@ -1,5 +1,9 @@
 "
-I test TimSort: Sorts by a sortBlock (mode d), against Pharo's sort: aBlock, == slot for slot, per backend.  The default (timSort:, sort:with:) is TimSortSmalltalk on every backend (testDefaultIsThePort); the other tests sort explicitly with TimSort sort:with:backend: sortBackend: the resumable C sort of my backend when it has one (the plugin natively; the library in TimSortFFIBlockTests), which asks the block one comparison at a time, else #smalltalk.  Errors, non-local returns, terminated Processes (also by another Process, at any moment), the Restart of the frame of the block, garbage collections, nested sorts, two Processes and resumed Warnings in the block; every test ends with no resumable sort live.
+I test `TimSort`: Sorts by a sortBlock (mode d), against Pharo's `sort: aBlock`, `==` slot for slot, per backend.
+
+The default (`timSort:`, `sort:with:`) is `TimSortSmalltalk` on every backend (`testDefaultIsThePort`); the other tests sort explicitly with `TimSort sort:with:backend: sortBackend`: the resumable C sort of my backend when it has one (the plugin natively; the library in `TimSortFFIBlockTests`), which asks the block one comparison at a time, else `#smalltalk`.
+
+Errors, non-local returns, terminated Processes (also by another `Process`, at any moment), the Restart of the frame of the block, garbage collections, nested sorts, two Processes and resumed Warnings in the block; every test ends with no resumable sort live.
 "
 Class {
 	#name : 'TimSortBlockTests',

@@ -1,5 +1,19 @@
 "
-I test TimSortLibrary itself: the identity of the library, the checks and failures of each call in the order of the primitives, the Arrays it sorts (SmallIntegers by value, Floats and small SmallIntegers by a permutation that keeps identity) and those it declines, every kind of buffer and every argSort against TimSortPortBackend (bits for bits, == per slot), the resumable sort and its ids, the private pinned buffers (the objects of the caller are never pinned), no lock across callouts (nested sorts, two Processes), libraryPath:, the session, the choice of the library by TimSort, and the same answers as the plugin on random calls when the VM has it.  Skipped when the library is not found.
+I test `TimSortLibrary` itself:
+
+- the identity of the library,
+- the checks and failures of each call in the order of the primitives,
+- the Arrays it sorts (SmallIntegers by value, Floats and small SmallIntegers by a permutation that keeps identity) and those it declines,
+- every kind of buffer and every argSort against `TimSortPortBackend` (bits for bits, `==` per slot),
+- the resumable sort and its ids,
+- the private pinned buffers (the objects of the caller are never pinned),
+- no lock across callouts (nested sorts, two Processes),
+- `libraryPath:`,
+- the session,
+- the choice of the library by `TimSort`,
+- and the same answers as the plugin on random calls when the VM has it.
+
+Skipped when the library is not found.
 "
 Class {
 	#name : 'TimSortLibraryTests',

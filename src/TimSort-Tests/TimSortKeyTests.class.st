@@ -1,5 +1,5 @@
 "
-I test TimSort: Sorts by keys computed once (mode c) and argSort:, against Pharo's sort: with the keys compared in the sortBlock, == slot for slot, per backend.
+I test `TimSort`: Sorts by keys computed once (mode c) and `argSort:`, against Pharo's `sort:` with the keys compared in the sortBlock, `==` slot for slot, per backend.
 "
 Class {
 	#name : 'TimSortKeyTests',

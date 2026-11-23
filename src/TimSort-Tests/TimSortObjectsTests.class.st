@@ -1,5 +1,5 @@
 "
-I test TimSort: The natural order of the elements of Arrays (mode a), against Pharo's sort and sort: [ :a :b | a >= b ], == slot for slot, per backend.
+I test `TimSort`: The natural order of the elements of Arrays (mode a), against Pharo's `sort` and `sort: [ :a :b | a >= b ]`, `==` slot for slot, per backend.
 "
 Class {
 	#name : 'TimSortObjectsTests',

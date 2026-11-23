@@ -1,19 +1,35 @@
 "
-I am the entry point of TimSort-Smalltalk, timsort in pure Smalltalk: the class side sorts SequenceableCollections (Arrays, OrderedCollections, any collection with at: and at:put:) in place and answers them.  The algorithm, a faithful port of timsort.c (CPython's listsort), is TimSortSmalltalkSorter; see its comment for the design and the map to the C code.
+I am the entry point of TimSort-Smalltalk, timsort in pure Smalltalk: the class side sorts SequenceableCollections (Arrays, OrderedCollections, any collection with `at:` and `at:put:`) in place and answers them. The algorithm, a faithful port of timsort.c (CPython's listsort), is `TimSortSmalltalkSorter`; see its comment for the design and the map to the C code.
 
-The sort is stable, also descending, adaptive (about one comparison per element on sorted, reversed or nearly sorted input) and makes few comparisons on random input, which pays when comparing is expensive.  Exceptions of the comparison go to the caller, and the collection keeps a permutation of its elements.
+The sort is stable, also descending, adaptive (about one comparison per element on sorted, reversed or nearly sorted input) and makes few comparisons on random input, which pays when comparing is expensive. Exceptions of the comparison go to the caller, and the collection keeps a permutation of its elements.
 
-The orders:
-- the natural order, #<, ascending or descending:
-	TimSortSmalltalk sort: #(3 1 2) copy.  ""#(1 2 3)""
-	TimSortSmalltalk sortDescending: #(3 1 2) copy.  ""#(3 2 1)""
-  the same permutations as aCollection sort and aCollection sort: [ :a :b | a >= b ];
-- a sortBlock in the style of Pharo (a <= b answers true when a may come before b), with the same result as aCollection sort: aSortBlock:
-	TimSortSmalltalk sort: words by: [ :a :b | a size <= b size ].
+## The orders
+
+- the natural order, `#<`, ascending or descending:
+
+```smalltalk
+TimSortSmalltalk sort: #(3 1 2) copy.  ""#(1 2 3)""
+TimSortSmalltalk sortDescending: #(3 1 2) copy.  ""#(3 2 1)""
+```
+
+the same permutations as `aCollection sort` and `aCollection sort: [ :a :b | a >= b ]`;
+
+- a sortBlock in the style of Pharo (`a <= b` answers true when a may come before b), with the same result as `aCollection sort: aSortBlock`:
+
+```smalltalk
+TimSortSmalltalk sort: words by: [ :a :b | a size <= b size ].
+```
+
 - a strict less-than block, the comparison of timsort.c and CPython (true when a must come before b):
-	TimSortSmalltalk sort: words lessThan: [ :a :b | a size < b size ].
-	TimSortSmalltalk sortDescending: words lessThan: [ :a :b | a size < b size ].
-- the same on a slice, from: start to: stop.
+
+```smalltalk
+TimSortSmalltalk sort: words lessThan: [ :a :b | a size < b size ].
+TimSortSmalltalk
+	sortDescending: words
+	lessThan: [ :a :b | a size < b size ].
+```
+
+- the same on a slice, `from: start to: stop`.
 
 I do not depend on the TimSort package (the VM plugin and the FFI library) and do not extend any class.
 "

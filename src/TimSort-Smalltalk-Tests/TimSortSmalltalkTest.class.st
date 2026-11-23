@@ -1,5 +1,12 @@
 "
-I test the behaviour of TimSort-Smalltalk: the permutations equal, slot for slot (==), those of Pharo's stable merge sort (sort: with a <= or >= sortBlock) on the shapes of TimSortSmalltalkTestData and many sizes; stability, also descending; slices; collections other than Array; the API of TimSortSmalltalk; and the guarantee that exceptions and other non-local exits of the comparison reach the caller and leave a permutation of the elements.
+I test the behaviour of TimSort-Smalltalk:
+
+- the permutations equal, slot for slot (`==`), those of Pharo's stable merge sort (`sort:` with a `<=` or `>=` sortBlock) on the shapes of `TimSortSmalltalkTestData` and many sizes;
+- stability, also descending;
+- slices;
+- collections other than `Array`;
+- the API of `TimSortSmalltalk`;
+- and the guarantee that exceptions and other non-local exits of the comparison reach the caller and leave a permutation of the elements.
 "
 Class {
 	#name : 'TimSortSmalltalkTest',

@@ -1,5 +1,5 @@
 "
-I test TimSort: The raw contract of the primitives (docs/TimSort.md, Primitive contract): answers, declines and failure codes, forwarders, the resumable sort and its table of ids; skipped without the plugin.
+I test `TimSort`: The raw contract of the primitives (`docs/TimSort.md`, Primitive contract): answers, declines and failure codes, forwarders, the resumable sort and its table of ids; skipped without the plugin.
 "
 Class {
 	#name : 'TimSortPrimitiveTests',

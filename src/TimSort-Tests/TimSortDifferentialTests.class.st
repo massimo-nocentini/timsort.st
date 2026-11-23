@@ -1,5 +1,5 @@
 "
-I test TimSort: The plugin against TimSortPortBackend (the same algorithm in Smalltalk) on random calls, and the resumable C sorts (TimSort sort:with:backend: #plugin, and #ffi when the library has one) against TimSortSmalltalk with inconsistent sortBlocks (strict, random, lying), which must make the same comparisons and leave the same permutation; skipped without the plugin (and the resumable sorts without coroutines).
+I test `TimSort`: The plugin against `TimSortPortBackend` (the same algorithm in Smalltalk) on random calls, and the resumable C sorts (`TimSort sort:with:backend: #plugin`, and `#ffi` when the library has one) against `TimSortSmalltalk` with inconsistent sortBlocks (strict, random, lying), which must make the same comparisons and leave the same permutation; skipped without the plugin (and the resumable sorts without coroutines).
 "
 Class {
 	#name : 'TimSortDifferentialTests',

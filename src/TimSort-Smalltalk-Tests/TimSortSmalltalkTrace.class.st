@@ -1,9 +1,11 @@
 "
-I record the comparisons of a sort, as the C program trace.c does for timsort.c (see TimSortSmalltalkFidelityTest): their count and a hash of the sequence of compared pairs (i, j), where i and j are the positions of the two elements in the input (numbered from 0) and i is the left operand of the strict less-than.
+I record the comparisons of a sort, as the C program `trace.c` does for timsort.c (see `TimSortSmalltalkFidelityTest`): their count and a hash of the sequence of compared pairs (i, j), where i and j are the positions of the two elements in the input (numbered from 0) and i is the left operand of the strict less-than.
 
-	traceHash := (traceHash * 1000003 + i) \\ 1000000007, then the same with j
+```smalltalk
+traceHash := (traceHash * 1000003 + i) \\ 1000000007
+```
 
-traceHash is the hash; the same fold over a sorted array of positions is #hashOf:.  The values stay SmallIntegers.
+then the same with j. `traceHash` is the hash; the same fold over a sorted array of positions is `#hashOf:`. The values stay SmallIntegers.
 "
 Class {
 	#name : 'TimSortSmalltalkTrace',

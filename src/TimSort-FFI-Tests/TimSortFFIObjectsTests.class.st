@@ -1,5 +1,5 @@
 "
-I run TimSortObjectsTests on the #ffi backend, TimSortLibrary, with the plugin hidden (hook #pluginMissing): the sorts by a sortBlock run on the resumable sort of the library when it has one.
+I run `TimSortObjectsTests` on the `#ffi` backend, `TimSortLibrary`, with the plugin hidden (hook `#pluginMissing`): the sorts by a sortBlock run on the resumable sort of the library when it has one.
 "
 Class {
 	#name : 'TimSortFFIObjectsTests',

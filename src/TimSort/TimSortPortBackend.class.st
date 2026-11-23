@@ -1,11 +1,14 @@
 "
-I am the #smalltalk backend of TimSort: I answer the backend protocol (the one of TimSortPrimitives) with TimSortSmalltalk, the port of timsort.c to Smalltalk (package TimSort-Smalltalk), so that every backend runs the same algorithm.  I never decline: the facade runs me when the plugin and the library are missing, and for every call that they decline (elements that are not all numbers or all strings, NaN among objects, a failed allocation in C...).
+I am the `#smalltalk` backend of `TimSort`: I answer the backend protocol (the one of `TimSortPrimitives`) with `TimSortSmalltalk`, the port of timsort.c to Smalltalk (package `TimSort-Smalltalk`), so that every backend runs the same algorithm. I never decline: the facade runs me when the plugin and the library are missing, and for every call that they decline (elements that are not all numbers or all strings, NaN among objects, a failed allocation in C...).
 
-The orders:
-- objects (sortObjects:..., and argSort:... of an Array of keys) by the sortBlock [ :a :b | a <= b ], descending [ :a :b | a >= b ]: exactly Pharo's sort and sort: [ :a :b | a >= b ], including what the comparisons do with elements that are not comparable (an error, or NaN anywhere).  A Float and an Integer are compared exactly, as the image code compares them (is:lessOrEqual:), also on the JIT of the native VM, whose compiled Float comparison rounds a SmallInteger beyond 2^53 to a double: so the order of numbers is the plugin's on every VM.  Only a range that holds both a Float and such a SmallInteger needs it (sortBlockFor:from:to:descending:), so the others keep Pharo's plain sortBlocks and their speed;
-- numeric buffers (sortBuffer:..., and argSort:... of a buffer of keys) by value, every NaN after every number and the NaNs equal to each other, -0.0 equal to 0.0: the order of the C engine (lessThanForKind:), descending with the reverse flag of timsort (NaN first).  The elements keep their bits, as in C.
+## The orders
 
-Since I am the same algorithm as the C sort, I give the same result as the plugin and the library for the same comparison answers, also for inconsistent orders.  The resumable sort (blockSort...) is not mine: the facade sorts by a sortBlock with TimSortSmalltalk directly, by default on every VM (TimSort blockSortBackend).
+- **objects** (`sortObjects:...`, and `argSort:...` of an `Array` of keys) by the sortBlock `[ :a :b | a <= b ]`, descending `[ :a :b | a >= b ]`: exactly Pharo's `sort` and `sort: [ :a :b | a >= b ]`, including what the comparisons do with elements that are not comparable (an error, or NaN anywhere). A `Float` and an `Integer` are compared exactly, as the image code compares them (`is:lessOrEqual:`), also on the JIT of the native VM, whose compiled `Float` comparison rounds a `SmallInteger` beyond 2^53 to a double: so the order of numbers is the plugin's on every VM. Only a range that holds both a `Float` and such a `SmallInteger` needs it (`sortBlockFor:from:to:descending:`), so the others keep Pharo's plain sortBlocks and their speed;
+- **numeric buffers** (`sortBuffer:...`, and `argSort:...` of a buffer of keys) by value, every NaN after every number and the NaNs equal to each other, -0.0 equal to 0.0: the order of the C engine (`lessThanForKind:`), descending with the reverse flag of timsort (NaN first). The elements keep their bits, as in C.
+
+## Same results as in C
+
+Since I am the same algorithm as the C sort, I give the same result as the plugin and the library for the same comparison answers, also for inconsistent orders. The resumable sort (`blockSort...`) is not mine: the facade sorts by a sortBlock with `TimSortSmalltalk` directly, by default on every VM (`TimSort blockSortBackend`).
 "
 Class {
 	#name : 'TimSortPortBackend',

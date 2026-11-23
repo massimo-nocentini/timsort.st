@@ -1,11 +1,16 @@
 "
-I sort by a sortBlock in the style of Pharo's #sort: and SortedCollection: sortBlock value: a value: b answers true when a may come before b, as [ :a :b | a <= b ] does (a SortFunction works as well).  The strict less-than of the algorithm is then
+I sort by a sortBlock in the style of Pharo's `#sort:` and `SortedCollection`: `sortBlock value: a value: b` answers true when a may come before b, as `[ :a :b | a <= b ]` does (a `SortFunction` works as well). The strict less-than of the algorithm is then
 
-	a < b  :=  (sortBlock value: b value: a) not
+```text
+a < b  :=  (sortBlock value: b value: a) not
+```
 
-which keeps equal elements in their order, so that I leave the same permutation as aCollection sort: sortBlock (Pharo's stable merge sort), with fewer comparisons on most inputs.
+which keeps equal elements in their order, so that I leave the same permutation as `aCollection sort: sortBlock` (Pharo's stable merge sort), with fewer comparisons on most inputs.
 
-	(TimSortSmalltalkSortBlockSorter sortBlock: [ :a :b | a size >= b size ]) sort: strings.
+```smalltalk
+(TimSortSmalltalkSortBlockSorter
+	sortBlock: [ :a :b | a size >= b size ]) sort: strings.
+```
 "
 Class {
 	#name : 'TimSortSmalltalkSortBlockSorter',

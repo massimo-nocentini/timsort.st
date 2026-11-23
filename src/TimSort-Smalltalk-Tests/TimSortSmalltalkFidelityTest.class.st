@@ -1,11 +1,15 @@
 "
-I check that TimSort-Smalltalk is faithful to timsort.c (commit fd70381039da47507984b9c1306914828871afbf): for the same input and the same answers of the comparison, the sorters make the same comparisons in the same order and leave the same permutation.
+I check that TimSort-Smalltalk is faithful to timsort.c (commit `fd70381039da47507984b9c1306914828871afbf`): for the same input and the same answers of the comparison, the sorters make the same comparisons in the same order and leave the same permutation.
 
-The expectations were computed by the C program of #traceProgram, compiled with timsort.c (cc -O2 -DNDEBUG trace.c timsort.c) and run once per case.  It sorts the positions 0 to n - 1 of a key array of TimSortSmalltalkTestData by lt(i, j) = key[i] < key[j], with list_sort_impl(list, reverse, 0, 1, lt, NULL) (CPython's default binary insertion), and prints the number of comparisons, the hash of the sequence of compared pairs and the hash of the permutation (TimSortSmalltalkTrace).  #expectedTraces holds them as (shape n seed reverse comparisons traceHash permutationHash), with the shapes numbered from 0 as in the C program.
+The expectations were computed by the C program of `#traceProgram`, compiled with timsort.c (`cc -O2 -DNDEBUG trace.c timsort.c`) and run once per case. It sorts the positions 0 to n - 1 of a key array of `TimSortSmalltalkTestData` by `lt(i, j) = key[i] < key[j]`, with `list_sort_impl(list, reverse, 0, 1, lt, NULL)` (CPython's default binary insertion), and prints the number of comparisons, the hash of the sequence of compared pairs and the hash of the permutation (`TimSortSmalltalkTrace`). `#expectedTraces` holds them as `(shape n seed reverse comparisons traceHash permutationHash)`, with the shapes numbered from 0 as in the C program.
 
-The tests sort the same positions with each sorter: TimSortSmalltalkLessThanSorter with the block lt, TimSortSmalltalkSortBlockSorter with the sortBlock [ :i :j | (lt value: j value: i) not ] (so that its strict less-than is lt again), and TimSortSmalltalkNaturalOrderSorter on TimSortSmalltalkTraceKeys.
+The tests sort the same positions with each sorter:
 
-merge_compute_minrun and powerloop are static functions of timsort.c; #expectedMinimumRunLengths and #expectedPowers were printed by the program of #policyProgram, which includes timsort.c.
+- `TimSortSmalltalkLessThanSorter` with the block `lt`,
+- `TimSortSmalltalkSortBlockSorter` with the sortBlock `[ :i :j | (lt value: j value: i) not ]` (so that its strict less-than is `lt` again),
+- and `TimSortSmalltalkNaturalOrderSorter` on TimSortSmalltalkTraceKeys.
+
+`merge_compute_minrun` and `powerloop` are static functions of timsort.c; `#expectedMinimumRunLengths` and `#expectedPowers` were printed by the program of `#policyProgram`, which includes timsort.c.
 "
 Class {
 	#name : 'TimSortSmalltalkFidelityTest',

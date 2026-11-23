@@ -1,5 +1,5 @@
 "
-I make the data of the tests of TimSort, on my class side: elements of each family (numbers, strings), edge values, and the orders to compare with.
+I make the data of the tests of `TimSort`, on my class side: elements of each family (numbers, strings), edge values, and the orders to compare with.
 "
 Class {
 	#name : 'TimSortTestData',

@@ -1,19 +1,29 @@
 "
-I am libTimSortFFI, the engine and the resumable sort of the TimSortPlugin built as a library of their own, which I call through the FFI of the image (plugins/TimSortPlugin/include/ffi/tsFFI.h of https://github.com/massimo-nocentini/pharo-vm has the contract).  TimSort uses me on a VM without the plugin.
+I am `libTimSortFFI`, the engine and the resumable sort of the `TimSortPlugin` built as a library of their own, which I call through the FFI of the image (`plugins/TimSortPlugin/include/ffi/tsFFI.h` of [pharo-vm](https://github.com/massimo-nocentini/pharo-vm) has the contract). `TimSort` uses me on a VM without the plugin.
 
-My class side answers the backend protocol of TimSort as the primitives answer it (docs/TimSort.md, Primitive contract): the same results, and a TimSortFailure where a primitive fails, after the same checks in the same order.  What I sort natively:
-- an Array (and its subclasses) whose elements in the range are all SmallIntegers: their values are sorted as int64 (ts_ffi_sort_i64) and stored back, since equal SmallIntegers are the same object;
-- an Array whose elements are Floats (not NaN) and SmallIntegers of at most 2^53 in magnitude (each one exactly a double): the doubles are the keys of a permutation (ts_ffi_argsort_f64), which puts the elements themselves back in their new order, so that every element keeps its identity (a BoxedFloat64 is an object) and equal elements keep their order;
-- the numeric buffers of the eight kinds of TimSort (TimSort kindFloat64...), sorted in place by value (ts_ffi_sort_f64...), the floats with every NaN last;
-- the permutation that sorts such keys (argSort:...), stably, the Arrays of keys as above, the buffers of narrow kinds widened to 8-byte keys first;
-- the resumable sort of any sortBlock (blockSortNew:descending: and the like, ts_ffi_coro_*), where the library has a stack switch for this machine (coroutinesAvailable), for TimSort sort:with:backend: #ffi (TimSort sorts by a sortBlock with TimSortSmalltalk by default).  I keep nothing of the sorts: the library knows their sizes (ts_ffi_coro_size), and the id that blockSortNew:descending: answers belongs to its caller at once.
-Anything else, Strings, LargeIntegers, NaN in an Array, Fractions, a mix of SmallIntegers beyond 2^53 and Floats..., is #'bad argument', on which TimSort sorts with its Smalltalk backend: the primitive declines the same way the strings and the LargeIntegers excepted, which it sorts.
+## What I sort
 
-The library sees addresses, not objects.  Each call copies what the library reads or writes into buffers of its own, made pinned in old space (basicNewPinned:) for that call only and unpinned when it returns, and copies the result back.  These buffers are never shared, so no lock is needed (there is none) and no process can unpin what another one still reads; the objects of the caller are never pinned.  A buffer of the caller is copied by primitive 105 (the bits as they are: NaN payloads, signed zeros), so it is left untouched when the library fails.
+My class side answers the backend protocol of `TimSort` as the primitives answer it (`docs/TimSort.md`, Primitive contract): the same results, and a `TimSortFailure` where a primitive fails, after the same checks in the same order. What I sort natively:
 
-Callouts use the default same-thread runner (FFILibrary>>runner): the resumable sorts of the library must all be driven from one thread, and the comparisons of a sortBlock are evaluated by the caller, in its own Process, between two callouts: the library never calls back.
+- an `Array` (and its subclasses) whose elements in the range are all SmallIntegers: their values are sorted as int64 (`ts_ffi_sort_i64`) and stored back, since equal SmallIntegers are the same object;
+- an `Array` whose elements are Floats (not NaN) and SmallIntegers of at most 2^53 in magnitude (each one exactly a double): the doubles are the keys of a permutation (`ts_ffi_argsort_f64`), which puts the elements themselves back in their new order, so that every element keeps its identity (a `BoxedFloat64` is an object) and equal elements keep their order;
+- the numeric buffers of the eight kinds of `TimSort` (`TimSort kindFloat64`...), sorted in place by value (`ts_ffi_sort_f64`...), the floats with every NaN last;
+- the permutation that sorts such keys (`argSort:...`), stably, the Arrays of keys as above, the buffers of narrow kinds widened to 8-byte keys first;
+- the resumable sort of any sortBlock (`blockSortNew:descending:` and the like, `ts_ffi_coro_*`), where the library has a stack switch for this machine (`coroutinesAvailable`), for `TimSort sort:with:backend: #ffi` (`TimSort` sorts by a sortBlock with `TimSortSmalltalk` by default). I keep nothing of the sorts: the library knows their sizes (`ts_ffi_coro_size`), and the id that `blockSortNew:descending:` answers belongs to its caller at once.
 
-I look for the library in the directories of the VM, the image and the system (FFIUnix64LibraryFinder and the like), as libTimSortFFI.so, libTimSortFFI.dylib, TimSortFFI.dll or libTimSortFFI.dll; libraryPath: names it instead.
+Anything else, Strings, LargeIntegers, NaN in an `Array`, Fractions, a mix of SmallIntegers beyond 2^53 and Floats..., is `#'bad argument'`, on which `TimSort` sorts with its Smalltalk backend: the primitive declines the same way the strings and the LargeIntegers excepted, which it sorts.
+
+## Memory
+
+The library sees addresses, not objects. Each call copies what the library reads or writes into buffers of its own, made pinned in old space (`basicNewPinned:`) for that call only and unpinned when it returns, and copies the result back. These buffers are never shared, so no lock is needed (there is none) and no process can unpin what another one still reads; the objects of the caller are never pinned. A buffer of the caller is copied by primitive 105 (the bits as they are: NaN payloads, signed zeros), so it is left untouched when the library fails.
+
+## Threads
+
+Callouts use the default same-thread runner (`FFILibrary>>runner`): the resumable sorts of the library must all be driven from one thread, and the comparisons of a sortBlock are evaluated by the caller, in its own `Process`, between two callouts: the library never calls back.
+
+## Where the library is
+
+I look for the library in the directories of the VM, the image and the system (`FFIUnix64LibraryFinder` and the like), as `libTimSortFFI.so`, `libTimSortFFI.dylib`, `TimSortFFI.dll` or `libTimSortFFI.dll`; `libraryPath:` names it instead.
 "
 Class {
 	#name : 'TimSortLibrary',

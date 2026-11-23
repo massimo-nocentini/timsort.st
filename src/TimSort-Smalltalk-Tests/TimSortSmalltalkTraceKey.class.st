@@ -1,5 +1,5 @@
 "
-I am an element for tracing the natural order (#<) of TimSortSmalltalkNaturalOrderSorter: my #< records the positions of the two operands in a TimSortSmalltalkTrace and compares the keys.
+I am an element for tracing the natural order (`#<`) of `TimSortSmalltalkNaturalOrderSorter`: my `#<` records the positions of the two operands in a `TimSortSmalltalkTrace` and compares the keys.
 "
 Class {
 	#name : 'TimSortSmalltalkTraceKey',

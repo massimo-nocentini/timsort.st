@@ -1,11 +1,12 @@
 "
-I am the backend of the TimSortPlugin: the primitives of the plugin, on my class side, answer the backend protocol of TimSort themselves (docs/TimSort.md, Primitive contract).  A failed primitive answers a TimSortFailure with its error code; primInfo answers nil.
+I am the backend of the `TimSortPlugin`: the primitives of the plugin, on my class side, answer the backend protocol of `TimSort` themselves (`docs/TimSort.md`, Primitive contract). A failed primitive answers a `TimSortFailure` with its error code; `primInfo` answers nil.
 
 The plugin sorts in place, in C, without allocating and without running Smalltalk, so no garbage collection can happen during a sort:
-- sortObjects:...: the slots of an Array whose elements are all numbers (SmallInteger, Float but NaN, normalized LargePositiveInteger and LargeNegativeInteger, compared exactly) or all strings of the four classes of stringClasses (compared by code point); anything else is #'bad argument', and the facade runs TimSortPortBackend;
-- sortBuffer:...: the elements of a numeric buffer of a kind (TimSort kindFloat64...), NaN last;
-- argSort:...: an Array of the indices start to stop, by keys that are an Array (as sortObjects:) or a buffer (as sortBuffer:);
-- blockSortNew:... and the three others: the resumable sort of mode d, one comparison at a time (TimSort sort:with:backend: #plugin, through TimSort class>>blockSort:from:to:with:backend:; timSort: aBlock runs TimSortSmalltalk by default), natively; on WebAssembly they fail with #'unsupported operation'.
+
+- `sortObjects:...`: the slots of an `Array` whose elements are all numbers (`SmallInteger`, `Float` but NaN, normalized `LargePositiveInteger` and `LargeNegativeInteger`, compared exactly) or all strings of the four classes of `stringClasses` (compared by code point); anything else is `#'bad argument'`, and the facade runs `TimSortPortBackend`;
+- `sortBuffer:...`: the elements of a numeric buffer of a kind (`TimSort kindFloat64`...), NaN last;
+- `argSort:...`: an `Array` of the indices start to stop, by keys that are an `Array` (as `sortObjects:`) or a buffer (as `sortBuffer:`);
+- `blockSortNew:...` and the three others: the resumable sort of mode d, one comparison at a time (`TimSort sort:with:backend: #plugin`, through `TimSort class>>blockSort:from:to:with:backend:`; `timSort: aBlock` runs `TimSortSmalltalk` by default), natively; on WebAssembly they fail with `#'unsupported operation'`.
 "
 Class {
 	#name : 'TimSortPrimitives',

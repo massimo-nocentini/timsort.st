@@ -1,5 +1,5 @@
 "
-I run TimSortBlockTests on the #ffi backend, TimSortLibrary, with the plugin hidden (hook #pluginMissing): the explicit sorts (TimSort sort:with:backend: #ffi) run on the resumable sort of the library when it has one, and the default (timSort:) on TimSortSmalltalk.
+I run `TimSortBlockTests` on the `#ffi` backend, `TimSortLibrary`, with the plugin hidden (hook `#pluginMissing`): the explicit sorts (`TimSort sort:with:backend: #ffi`) run on the resumable sort of the library when it has one, and the default (`timSort:`) on `TimSortSmalltalk`.
 "
 Class {
 	#name : 'TimSortFFIBlockTests',

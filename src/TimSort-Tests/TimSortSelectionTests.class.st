@@ -1,5 +1,5 @@
 "
-I test TimSort: The choice of the backends: the test hooks, the session, the probe of the library, and where the sorts by a sortBlock run: TimSortSmalltalk by default in every configuration, the resumable C sorts of resumableBackends when sort:with:backend: names them.
+I test `TimSort`: The choice of the backends: the test hooks, the session, the probe of the library, and where the sorts by a sortBlock run: `TimSortSmalltalk` by default in every configuration, the resumable C sorts of `resumableBackends` when `sort:with:backend:` names them.
 "
 Class {
 	#name : 'TimSortSelectionTests',

@@ -1,5 +1,5 @@
 "
-I am the error code of a failed primitive of the TimSortPlugin, or of a backend call that fails as the primitive would (ec: a Symbol, such as #'bad argument', or nil when the module is missing).  The facade signals for #'no modification' and #'bad index' (which it checks itself first) and runs TimSortPortBackend for any other failure.
+I am the error code of a failed primitive of the `TimSortPlugin`, or of a backend call that fails as the primitive would (`ec`: a `Symbol`, such as `#'bad argument'`, or nil when the module is missing). The facade signals for `#'no modification'` and `#'bad index'` (which it checks itself first) and runs `TimSortPortBackend` for any other failure.
 "
 Class {
 	#name : 'TimSortFailure',

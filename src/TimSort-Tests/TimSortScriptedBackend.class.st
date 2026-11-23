@@ -1,5 +1,5 @@
 "
-I am a backend of TimSort for the tests of the facade: each call is recorded (calls) and answers the next scripted answer of its selector, else what TimSortPortBackend answers.  coroutines says whether I claim a resumable sort.
+I am a backend of `TimSort` for the tests of the facade: each call is recorded (`calls`) and answers the next scripted answer of its selector, else what `TimSortPortBackend` answers. `coroutines` says whether I claim a resumable sort.
 "
 Class {
 	#name : 'TimSortScriptedBackend',

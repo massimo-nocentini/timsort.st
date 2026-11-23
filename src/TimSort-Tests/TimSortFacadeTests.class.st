@@ -1,5 +1,5 @@
 "
-I test TimSort: The facade with a scripted backend: each failure of a backend, the fallback to TimSortPortBackend, and the loop of the resumable sort (its requests, answers, permutation and freeing), which runs only when sort:with:backend: names it: a scripted backend is named #ffi (TimSort backend), and timSort: never touches it.
+I test `TimSort`: The facade with a scripted backend: each failure of a backend, the fallback to `TimSortPortBackend`, and the loop of the resumable sort (its requests, answers, permutation and freeing), which runs only when `sort:with:backend:` names it: a scripted backend is named `#ffi` (`TimSort backend`), and `timSort:` never touches it.
 "
 Class {
 	#name : 'TimSortFacadeTests',

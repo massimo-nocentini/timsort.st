@@ -1,5 +1,5 @@
 "
-I test TimSort: The extension methods on each kind of collection (OrderedCollection, SortedCollection, Interval, String, Symbol, Text, Array subclasses), the copies of timSorted, read-only collections (and the retry of a handler of ModificationForbidden) and ranges, per backend.
+I test `TimSort`: The extension methods on each kind of collection (`OrderedCollection`, `SortedCollection`, `Interval`, `String`, `Symbol`, `Text`, `Array` subclasses), the copies of `timSorted`, read-only collections (and the retry of a handler of `ModificationForbidden`) and ranges, per backend.
 "
 Class {
 	#name : 'TimSortCollectionTests',

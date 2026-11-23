@@ -1,35 +1,49 @@
 "
-I am timsort in pure Smalltalk: a port of timsort.c (https://github.com/massimo-nocentini/timsort.c, commit fd70381), which is the sort of CPython's lists (listsort of Objects/listobject.c, CPython 3.13 and 3.14) by Tim Peters, with the powersort merge policy.  I sort a slice of a SequenceableCollection in place, adaptively (natural runs, about one comparison per element on sorted or reversed input), stably, and with as few comparisons as a merge sort on random data.
+I am timsort in pure Smalltalk: a port of [timsort.c](https://github.com/massimo-nocentini/timsort.c) (commit `fd70381`), which is the sort of CPython's lists (`listsort` of `Objects/listobject.c`, CPython 3.13 and 3.14) by Tim Peters, with the powersort merge policy. I sort a slice of a `SequenceableCollection` in place, adaptively (natural runs, about one comparison per element on sorted or reversed input), stably, and with as few comparisons as a merge sort on random data.
 
-I am faithful to the C code: given the same input and the same answers of the comparison, I make exactly the same comparisons, with the arguments in the same order, and leave the same permutation; the tests of TimSort-Smalltalk-Tests check the comparison traces against the C library.  The only comparison is a strict less-than, my subclass responsibility #is:lessThan: (ISLT of the C code): TimSortSmalltalkLessThanSorter asks a block, TimSortSmalltalkNaturalOrderSorter sends #<, TimSortSmalltalkSortBlockSorter turns a Pharo sortBlock (a <= b style) into a strict less-than.
+I am faithful to the C code: given the same input and the same answers of the comparison, I make exactly the same comparisons, with the arguments in the same order, and leave the same permutation; the tests of `TimSort-Smalltalk-Tests` check the comparison traces against the C library.
 
-Use the class side of TimSortSmalltalk, or one of my subclasses directly:
+The only comparison is a strict less-than, my subclass responsibility `#is:lessThan:` (`ISLT` of the C code):
 
-	(TimSortSmalltalkLessThanSorter lessThan: [ :a :b | a size < b size ]) sort: anArray.
-	TimSortSmalltalkNaturalOrderSorter new beDescending; sort: anArray from: 10 to: 20.
+- `TimSortSmalltalkLessThanSorter` asks a block,
+- `TimSortSmalltalkNaturalOrderSorter` sends `#<`,
+- `TimSortSmalltalkSortBlockSorter` turns a Pharo sortBlock (`a <= b` style) into a strict less-than.
+
+Use the class side of `TimSortSmalltalk`, or one of my subclasses directly:
+
+```smalltalk
+(TimSortSmalltalkLessThanSorter lessThan: [ :a :b | a size < b size ])
+	sort: anArray.
+TimSortSmalltalkNaturalOrderSorter new
+	beDescending;
+	sort: anArray from: 10 to: 20.
+```
 
 An instance sorts one collection at a time and may be reused (it keeps its merge buffer); a comparison that sorts other collections must use other instances.
 
-How the C code maps onto me:
-- list_sort_impl: #sort:from:to: (#beDescending is its reverse flag) and #sortRuns.
-- count_run: #countRunAt:limit:, #ascendingRunAt:from:limit:, #descendingRunAt:from:limit:.
-- binarysort: #binaryInsertionSortAt:count:sorted: and #insertAt:after:.  Only CPython's default variant is ported (binary insertion with the plain branch).  The C code also has an ordinary insertion sort, which makes more comparisons and is never CPython's default, and a branch-free variant of the binary insertion, which is a C code generation trick that makes the same comparisons.
-- gallop_left and gallop_right: #gallopLeft:in:from:count:hint: and #gallopRight:in:from:count:hint:, which end with the binary searches #searchLeft:in:from:after:upTo: and #searchRight:in:from:after:upTo:.
-- merge_lo and merge_hi: #mergeLowAt:count:with:count: and #mergeHighAt:count:with:count:, split into a straightforward phase (#mergeLowOneAtATime, #mergeHighOneAtATime) and a galloping phase (#mergeLowGalloping, #mergeHighGalloping); their goto Succeed, Fail, CopyA and CopyB are #moveRemainingAFromBuffer, #moveRemainingBFromBuffer, #moveRemainingAThenFirstB and #moveRemainingBThenLastA.
-- merge_at, found_new_run, merge_force_collapse: #mergeAt:, #foundNewRunOfLength:, #mergeForceCollapse.
-- powerloop and merge_compute_minrun: the class side, #powerOfRunAt:length:nextLength:total: and #minimumRunLengthFor:.  MIN_GALLOP, MAX_MINRUN and MERGESTATE_TEMP_SIZE are #minimumGallop, #maximumMinimumRun and #initialBufferSize there.
-- merge_getmem: #ensureBufferCapacity:, which allocates exactly what a merge needs, never less than #initialBufferSize slots, and keeps the buffer between merges and between sorts.  The binary insertion uses the buffer too, to move elements up by one slot with two primitive copies (the C code uses a loop): this changes no comparison.  The copies into the collection are primitive in an Array only, element by element (at:put:) in any other collection (replaceItemsFrom:to:with:startingAt:), whose replaceFrom:to:with:startingAt: may want a replacement of its own class (a Text).
+## How the C code maps onto me
 
-Indices are those of the collection (1-based, absolute) instead of pointers; a pending run is a TimSortSmalltalkRun.  The cursors of the merge in progress are instance variables (target, nextA, nextB, remainingA, remainingB), so that the phases of a merge are small methods and the merge can be undone when it is interrupted:
+- `list_sort_impl`: `#sort:from:to:` (`#beDescending` is its reverse flag) and `#sortRuns`.
+- `count_run`: `#countRunAt:limit:`, `#ascendingRunAt:from:limit:`, `#descendingRunAt:from:limit:`.
+- `binarysort`: `#binaryInsertionSortAt:count:sorted:` and `#insertAt:after:`. Only CPython's default variant is ported (binary insertion with the plain branch). The C code also has an ordinary insertion sort, which makes more comparisons and is never CPython's default, and a branch-free variant of the binary insertion, which is a C code generation trick that makes the same comparisons.
+- `gallop_left` and `gallop_right`: `#gallopLeft:in:from:count:hint:` and `#gallopRight:in:from:count:hint:`, which end with the binary searches `#searchLeft:in:from:after:upTo:` and `#searchRight:in:from:after:upTo:`.
+- `merge_lo` and `merge_hi`: `#mergeLowAt:count:with:count:` and `#mergeHighAt:count:with:count:`, split into a straightforward phase (`#mergeLowOneAtATime`, `#mergeHighOneAtATime`) and a galloping phase (`#mergeLowGalloping`, `#mergeHighGalloping`); their `goto` `Succeed`, `Fail`, `CopyA` and `CopyB` are `#moveRemainingAFromBuffer`, `#moveRemainingBFromBuffer`, `#moveRemainingAThenFirstB` and `#moveRemainingBThenLastA`.
+- `merge_at`, `found_new_run`, `merge_force_collapse`: `#mergeAt:`, `#foundNewRunOfLength:`, `#mergeForceCollapse`.
+- `powerloop` and `merge_compute_minrun`: the class side, `#powerOfRunAt:length:nextLength:total:` and `#minimumRunLengthFor:`. `MIN_GALLOP`, `MAX_MINRUN` and `MERGESTATE_TEMP_SIZE` are `#minimumGallop`, `#maximumMinimumRun` and `#initialBufferSize` there.
+- `merge_getmem`: `#ensureBufferCapacity:`, which allocates exactly what a merge needs, never less than `#initialBufferSize` slots, and keeps the buffer between merges and between sorts. The binary insertion uses the buffer too, to move elements up by one slot with two primitive copies (the C code uses a loop): this changes no comparison. The copies into the collection are primitive in an `Array` only, element by element (`at:put:`) in any other collection (`replaceItemsFrom:to:with:startingAt:`), whose `replaceFrom:to:with:startingAt:` may want a replacement of its own class (a `Text`).
 
-	merge low (run A, the shorter, is in the buffer):
-		the next element of A is buffer at: nextA, the next of B is items at: nextB,
-		the next slot to fill is items at: target, upwards, and target + remainingA = nextB
-	merge high (run B, the shorter, is in the buffer):
-		the last element of A is items at: nextA, the last of B is buffer at: nextB = remainingB,
-		the next slot to fill is items at: target, downwards, and target - remainingB = nextA
+## Indices and cursors
 
-Exceptions and other non-local exits (a ^ in a block, Process>>terminate) raised by a comparison go to the caller.  Before the unwinding leaves me, the merge in progress copies its buffered elements back into their holes (ifCurtailed:, as the C code does on its Fail path) and a descending sort reverses the slice back (ensure:, as list_sort_impl does), so the collection always holds a permutation of its elements.  An exception handler that runs before the unwinding (on:do: runs its handler block on top of the sort) can still see a hole filled with a duplicate.  A comparison that changes the collection being sorted gets an unspecified order.
+Indices are those of the collection (1-based, absolute) instead of pointers; a pending run is a `TimSortSmalltalkRun`. The cursors of the merge in progress are instance variables (`target`, `nextA`, `nextB`, `remainingA`, `remainingB`), so that the phases of a merge are small methods and the merge can be undone when it is interrupted:
+
+- **merge low** (run A, the shorter, is in the buffer): the next element of A is `buffer at: nextA`, the next of B is `items at: nextB`, the next slot to fill is `items at: target`, upwards, and `target + remainingA = nextB`
+- **merge high** (run B, the shorter, is in the buffer): the last element of A is `items at: nextA`, the last of B is `buffer at: nextB = remainingB`, the next slot to fill is `items at: target`, downwards, and `target - remainingB = nextA`
+
+## Interrupted sorts
+
+Exceptions and other non-local exits (a `^` in a block, `Process>>terminate`) raised by a comparison go to the caller. Before the unwinding leaves me, the merge in progress copies its buffered elements back into their holes (`ifCurtailed:`, as the C code does on its `Fail` path) and a descending sort reverses the slice back (`ensure:`, as `list_sort_impl` does), so the collection always holds a permutation of its elements.
+
+An exception handler that runs before the unwinding (`on:do:` runs its handler block on top of the sort) can still see a hole filled with a duplicate. A comparison that changes the collection being sorted gets an unspecified order.
 "
 Class {
 	#name : 'TimSortSmalltalkSorter',
